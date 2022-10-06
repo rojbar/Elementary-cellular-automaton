@@ -52,6 +52,7 @@ func (automaton *automaton) obtainRule(state []int) (rule string) {
 	return
 }
 
+//obtains the neighbor cells indexes according to a circular ending
 func (automaton *automaton) obtainCellNeighborhood(cellPosition int) (answer []int) {
 	rightNeighbors := getRightCells(automaton.rightNeighbors, cellPosition, len(automaton.cells))
 	leftNeighbors := getLeftCells(automaton.leftNeighbors, cellPosition, len(automaton.cells))
