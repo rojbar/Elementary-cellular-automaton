@@ -1,5 +1,5 @@
 package structs
 
-type State struct {
+type state struct {
 	value string
 }

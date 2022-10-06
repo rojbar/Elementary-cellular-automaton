@@ -1,46 +1,51 @@
 package structs
 
 type automaton struct {
-	cells          []Cell
-	states         map[string]State
-	transitions    map[string]State
+	cells          []cell
+	states         map[string]state
+	transitions    map[string]state
 	leftNeighbors  int
 	rightNeighbors int
-	currentCell    int
 }
 
-func NewAutomaton(cellAmount int, states map[string]State, transitions map[string]State, leftNeighbors int, rightNeighbors int) *automaton {
+func NewAutomaton(cellAmount int, states []string, transitions map[string]string, leftNeighbors int, rightNeighbors int) *automaton {
 	return &automaton{
-		make([]Cell, cellAmount),
-		states,
-		transitions,
+		make([]cell, cellAmount),
+		createStates(states),
+		createTransitions(transitions),
 		leftNeighbors,
 		rightNeighbors,
-		0,
 	}
 }
 
-func (automaton *automaton) CurrentState() (cells []Cell) {
-	cells = make([]Cell, len(automaton.cells))
-	copy(cells, automaton.cells)
+func (automaton *automaton) CurrentState() (cells []string) {
+	cells = make([]string, len(automaton.cells))
+	for key, value := range automaton.cells {
+		cells[key] = value.state.value
+	}
+
 	return
 }
 
-func (automaton *automaton) NextIteration() {
-	cellNeighborhood := automaton.obtainCellNeighborhood(automaton.currentCell)
-	automaton.updateCell(automaton.currentCell, cellNeighborhood)
+func (automaton *automaton) NextGeneration() {
+	newCells := make([]cell, len(automaton.cells))
+	for i := 0; i < len(automaton.cells); i++ {
+		cellNeighborhood := automaton.obtainCellNeighborhood(i)
+		newCells[i] = cell{state: automaton.newStateFromRule(cellNeighborhood)}
+	}
 
-	automaton.currentCell += 1
+	automaton.cells = newCells
+}
 
-	if automaton.currentCell == len(automaton.cells) {
-		automaton.currentCell = 0
+func (automaton *automaton) SetCells(states []string) {
+	for key := range automaton.cells {
+		automaton.cells[key].state = automaton.states[states[key]]
 	}
 }
 
-func (automaton *automaton) updateCell(currentCell int, state []int) {
+func (automaton *automaton) newStateFromRule(state []int) state {
 	rule := automaton.obtainRule(state)
-	newState := automaton.transitions[rule]
-	automaton.cells[currentCell].state = newState
+	return automaton.transitions[rule]
 }
 
 func (automaton *automaton) obtainRule(state []int) (rule string) {
@@ -64,12 +69,13 @@ func (automaton *automaton) obtainCellNeighborhood(cellPosition int) (answer []i
 }
 
 func getRightCells(steps int, center int, max int) (rightNeighbors []int) {
+	rightNeighbors = make([]int, steps)
 	current := center
 
 	for i := 0; i < steps; i++ {
 		current += 1
 
-		if current == max {
+		if current >= max {
 			current = 0
 		}
 
@@ -80,16 +86,35 @@ func getRightCells(steps int, center int, max int) (rightNeighbors []int) {
 }
 
 func getLeftCells(steps int, center int, max int) (leftNeighbors []int) {
+	leftNeighbors = make([]int, steps)
 	current := center
 
 	for i := 0; i < steps; i++ {
 		current -= 1
 
-		if current == 0 {
+		if current < 0 {
 			current = max - 1
 		}
 
-		leftNeighbors[max-1-i] = current
+		leftNeighbors[len(leftNeighbors)-1-i] = current
+	}
+
+	return
+}
+
+func createStates(states []string) (properStates map[string]state) {
+	properStates = make(map[string]state, len(states))
+	for _, value := range states {
+		properStates[value] = state{value: value}
+	}
+
+	return
+}
+
+func createTransitions(transitions map[string]string) (properTransitions map[string]state) {
+	properTransitions = make(map[string]state, len(transitions))
+	for key, value := range transitions {
+		properTransitions[key] = state{value: value}
 	}
 
 	return
