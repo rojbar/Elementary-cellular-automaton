@@ -1,4 +1,4 @@
-package structs
+package automaton
 
 type cell struct {
 	state

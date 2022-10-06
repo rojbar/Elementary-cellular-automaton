@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/rojbar/acu/structs"
+	"github.com/rojbar/acu/automaton"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	transitions["⬜;⬜;⬛;"] = "⬜"
 	transitions["⬜;⬜;⬜;"] = "⬛"
 
-	auto := structs.NewAutomaton(50, states, transitions, 1, 1)
+	auto := automaton.NewAutomaton(50, states, transitions, 1, 1)
 	auto.SetCells(initial(50))
 
 	fmt.Println(auto.CurrentState())
@@ -29,7 +29,6 @@ func main() {
 		auto.NextGeneration()
 		fmt.Println(auto.CurrentState())
 	}
-
 }
 
 func initial(size int) []string {
