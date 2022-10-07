@@ -1,6 +1,6 @@
 package automaton
 
-type automaton struct {
+type Automaton struct {
 	cells          []cell
 	states         map[string]state
 	transitions    map[string]state
@@ -8,8 +8,8 @@ type automaton struct {
 	rightNeighbors int
 }
 
-func NewAutomaton(cellAmount int, states []string, transitions map[string]string, leftNeighbors int, rightNeighbors int) *automaton {
-	return &automaton{
+func NewAutomaton(cellAmount int, states []string, transitions map[string]string, leftNeighbors int, rightNeighbors int) *Automaton {
+	return &Automaton{
 		make([]cell, cellAmount),
 		createStates(states),
 		createTransitions(transitions),
@@ -18,7 +18,7 @@ func NewAutomaton(cellAmount int, states []string, transitions map[string]string
 	}
 }
 
-func (automaton *automaton) CurrentState() (cells []string) {
+func (automaton *Automaton) CurrentState() (cells []string) {
 	cells = make([]string, len(automaton.cells))
 	for key, value := range automaton.cells {
 		cells[key] = value.state.value
@@ -27,7 +27,7 @@ func (automaton *automaton) CurrentState() (cells []string) {
 	return
 }
 
-func (automaton *automaton) NextGeneration() {
+func (automaton *Automaton) NextGeneration() {
 	newCells := make([]cell, len(automaton.cells))
 	for i := 0; i < len(automaton.cells); i++ {
 		cellNeighborhood := automaton.obtainCellNeighborhood(i)
@@ -37,18 +37,18 @@ func (automaton *automaton) NextGeneration() {
 	automaton.cells = newCells
 }
 
-func (automaton *automaton) SetCells(states []string) {
+func (automaton *Automaton) SetCells(states []string) {
 	for key := range automaton.cells {
 		automaton.cells[key].state = automaton.states[states[key]]
 	}
 }
 
-func (automaton *automaton) newStateFromRule(state []int) state {
+func (automaton *Automaton) newStateFromRule(state []int) state {
 	rule := automaton.obtainRule(state)
 	return automaton.transitions[rule]
 }
 
-func (automaton *automaton) obtainRule(state []int) (rule string) {
+func (automaton *Automaton) obtainRule(state []int) (rule string) {
 	rule = ""
 	for _, value := range state {
 		rule += automaton.cells[value].state.value + ";"
@@ -58,7 +58,7 @@ func (automaton *automaton) obtainRule(state []int) (rule string) {
 }
 
 //obtains the neighbor cells indexes according to a circular ending
-func (automaton *automaton) obtainCellNeighborhood(cellPosition int) (answer []int) {
+func (automaton *Automaton) obtainCellNeighborhood(cellPosition int) (answer []int) {
 	rightNeighbors := getRightCells(automaton.rightNeighbors, cellPosition, len(automaton.cells))
 	leftNeighbors := getLeftCells(automaton.leftNeighbors, cellPosition, len(automaton.cells))
 

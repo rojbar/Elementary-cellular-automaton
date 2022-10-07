@@ -8,18 +8,192 @@
 				go.run(result.instance);
 			});
 		</script>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+		<link rel="stylesheet" href="styles.css">
 	</head>
 	<body>
-		<div>
-			<label for="inputField">Enter value</label>
-			<input id="inputField" name="Hash" type="text">
-			<div id="outputHash" style="font-size: 20px"></div>
+		<div class="container-fluid">
+			<div class="row vh-100" style="background-color: yellow;">
+				<div class="col-10 vh-100" style="background-color: red;">
+					<div class="row" style="background-color: white; height: 90%;">
+						<div class="col ">
+							<canvas id="canva" width="100%" height="100%"></canvas>
+
+						</div>
+					</div>
+					<div class="row overflow-auto" style="background-color: purple; height: 10%;" id="cellRow">
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							1
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							2
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							3
+						</div>
+						<div class="col border border-secondary border-5 h-100 d-flex align-items-center justify-content-center" style="background-color: f5f5f5; text-align:center;">
+							4
+						</div>
+					</div>
+				</div>
+				<div class="col-2 vh-100 overflow-auto"  style="background-color: black; color: white;">
+					<div class="row my-3">
+						<div class="col">
+							<label class="form-label">Cell Amount</label>
+							<input class="form-control" id="amountCells" type="number">
+				
+							<label class="form-label">Right neighbors</label>
+							<input class="form-control" id="rightNeighbors" type="number">
+				
+							<label class="form-label">Left neighbors</label>
+							<input class="form-control" id="leftNeighbors" type="number">
+				
+							<label class="form-label">States for a single cell, separated by comma</label>
+							<textarea class="form-control" id="states"></textarea>
+				
+							<label class="form-label">Ruleset for each state combination, [state;state;state;]-[newstate],</label>
+							<textarea class="form-control" id="transitions"></textarea>
+				
+							<label class="form-label">Initial State for each cell,separated by ,</label>
+							<textarea class="form-control" id="initialState"></textarea>
+						</div>
+					</div>
+					
+					<div class="row my-4" style="text-align: center;">
+						<div class="col">
+							<div class="btn-group" role="group" aria-label="Basic example">
+								<button class="btn btn-light" id="newAutomata">New Automata</button>
+								<button class="btn btn-light">Next Generation</button>
+							</div>
+						</div>
+					</div>
+					<div class="row my-2" style="text-align: center;">
+						<div class="col">
+							<div class="btn-group" role="group" aria-label="Basic example">
+								<button class="btn btn-light">Play</button>
+								<button class="btn btn-light">Stop</button>
+								<button class="btn btn-light">Reset</button>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+
+			</div>
 		</div>
 		<script>
-			var inputField = document.querySelector('#inputField')
-			var outputHash = document.querySelector('#outputHash')
-			inputField.addEventListener('keyup', function() {
-				console.log(hola(inputField.value))
+			let inputField = document.querySelector('#newAutomata');
+			inputField.addEventListener('click', function() {
+
+				let cellAmount = parseInt(document.querySelector('#amountCells').value) ;
+				let rightNeighbors = parseInt(document.querySelector("#rightNeighbors").value);
+				let leftNeighbors = parseInt(document.querySelector("#leftNeighbors").value);
+				let states = document.querySelector("#states").value.split(",");
+				let keys = []
+				let values =[] 
+				let transitions = document.querySelector("#transitions").value.split(",")
+				for(i = 0; i < transitions.length; i++){
+					keyValue = transitions[i].split("-")
+					keys[i] = keyValue[0]
+					values[i] = keyValue[1]
+				}
+				let initialState = document.querySelector("#initialState").value.split(",")
+
+				//console.log(cellAmount, rightNeighbors, leftNeighbors, states, trans)
+				newAutomata(cellAmount, leftNeighbors, rightNeighbors, states, keys, values)
+				setInitialState(initialState)
+				console.log("a",getCurrentState())
+
+				for (i=0; i < 10; i++){
+					getNextGeneration()
+					console.log(getCurrentState())
+				}
+			
+
 			});
 		</script>
 	</body>
