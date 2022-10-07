@@ -6,7 +6,10 @@ import (
 	"github.com/rojbar/acu/automaton"
 )
 
-var auto *automaton.Automaton
+var (
+	auto       *automaton.Automaton
+	generation int
+)
 
 func main() {
 	c := make(chan struct{}, 0)
@@ -14,6 +17,7 @@ func main() {
 	js.Global().Set("getCurrentState", js.FuncOf(getCurrentState))
 	js.Global().Set("getNextGeneration", js.FuncOf(getNextGeneration))
 	js.Global().Set("setInitialState", js.FuncOf(setInitialState))
+	js.Global().Set("getCurrentGeneration", js.FuncOf(getCurrentGeneration))
 	<-c
 }
 
@@ -25,6 +29,7 @@ func main() {
 // 4 -> keys string[]
 // 5 -> values string[]
 func newAutomata(this js.Value, args []js.Value) interface{} {
+	generation = 0
 	cellAmount := args[0].Int()
 	leftNeighbors := args[1].Int()
 	rightNeighbors := args[2].Int()
@@ -59,8 +64,13 @@ func getCurrentState(this js.Value, args []js.Value) interface{} {
 	return aux
 }
 
+func getCurrentGeneration(this js.Value, args []js.Value) interface{} {
+	return generation
+}
+
 func getNextGeneration(this js.Value, args []js.Value) interface{} {
 	auto.NextGeneration()
+	generation += 1
 
 	return true
 }
