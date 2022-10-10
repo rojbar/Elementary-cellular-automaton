@@ -13,8 +13,8 @@
 	</head>
 	<body>
 		<div class="container-fluid">
-			<div class="row vh-100" style="background-color: yellow;">
-				<div class="col-10 vh-100" style="background-color: red;">
+			<div class="row vh-100">
+				<div class="col-10 vh-100">
 					<div class="row" style="background-color: grey; height: 90%;">
 						<div class="col h-100  pt-2 overflow-auto"> 
 							<canvas id="canvas" style="background-color: whitesmoke;"></canvas>
@@ -28,18 +28,35 @@
 						<div class="col">
 							<label class="form-label">Cell Amount</label>
 							<input class="form-control" id="amountCells" type="number">
-				
+						</div>
+						<div class="col">
 							<label class="form-label">Right neighbors</label>
 							<input class="form-control" id="rightNeighbors" type="number">
-				
+						</div>
+						<div class="col">
 							<label class="form-label">Left neighbors</label>
 							<input class="form-control" id="leftNeighbors" type="number">
-				
-							<label class="form-label">States for a single cell, separated by comma</label>
-							<textarea class="form-control" id="states"></textarea>
-				
-							<label class="form-label">Ruleset for each state combination, [state;state;state;]-[newstate],</label>
-							<textarea class="form-control" id="transitions"></textarea>
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col">
+							<div class="row">
+								<div class="col">
+									<label class="form-label">States for a single cell, separated by comma</label>
+									<textarea class="form-control" id="states"></textarea>
+								</div>
+							</div>
+							<div class="row mt-2" style="text-align: center;">
+								<div class="col">
+									<button class="btn btn-light" id="generateRules">Create Rules</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row my-3">
+						<div class="col">
+							<label class="form-label">State for each possible ruleset, [state;state;state;...]-[newstate],</label>
+							<textarea class="form-control" id="transitions" rows="10"></textarea>
 						</div>
 					</div>
 					
@@ -54,9 +71,7 @@
 					<div class="row my-2" style="text-align: center;">
 						<div class="col">
 							<div class="btn-group" role="group" aria-label="Basic example">
-								<button class="btn btn-light">Play</button>
-								<button class="btn btn-light">Stop</button>
-								<button class="btn btn-light">Reset</button>
+								<button class="btn btn-light" id="playButton">Play</button>
 							</div>
 						</div>
 					</div>
@@ -94,6 +109,26 @@
 				  ctx.font = `${size}px arial`;
 				  ctx.fillText(generation,size,10+(posGeneration*(size+5))); 
 				}
+			}
+
+			function configurations(states, cellsQuantity) {
+				
+				let answer = states.map(x => [x])
+				for(let i = 1; i < cellsQuantity; i++){
+					answer = multiplyArrays(answer, states.map(x => [x]))				
+				}
+
+				return answer;
+			};
+	
+			function multiplyArrays(a,b){
+				let answer = []
+				for(let i = 0; i < a.length; i++){
+					for(let j =0; j < b.length; j++){
+						answer.push(a[i].concat(b[j]))
+					}
+				}
+				return answer
 			}
 
 			function obtainInitialState(){
@@ -141,6 +176,32 @@
 				cell.innerText =  states[posNewState];
 			}
 
+
+			let states = document.querySelector("#generateRules").addEventListener('click', function(){
+				let states = document.querySelector("#states").value.split(",");
+				let rightNeighbors = parseInt(document.querySelector("#rightNeighbors").value);
+				let leftNeighbors = parseInt(document.querySelector("#leftNeighbors").value);
+
+				if(states.length >= 8){
+					window.alert("too many states, too many rulesets!")
+					return
+				}
+				let perm = configurations(states, rightNeighbors + leftNeighbors+1);
+				let transitions = document.querySelector("#transitions")
+
+				value = "";
+				for(let i = 0; i < perm.length; i++){
+					if (i === perm.length -1 ){
+						value += perm[i].join(";")+`;-${states[0]}`;
+						break
+					}
+					value += perm[i].join(";")+`;-${states[0]}\n`;
+				}
+				transitions.value = value;
+
+			});
+
+
 			let newAutomataButton= document.querySelector('#newAutomata');
 			newAutomataButton.addEventListener('click', function() {
 				clearCanvas();
@@ -151,9 +212,9 @@
 				window.document.states = states
 				let keys = []
 				let values =[] 
-				let transitions = document.querySelector("#transitions").value.split(",")
+				let transitions = document.querySelector("#transitions").value.split("\n");
 				for(i = 0; i < transitions.length; i++){
-					keyValue = transitions[i].split("-")
+					keyValue = transitions[i].trim().split("-")
 					keys[i] = keyValue[0]
 					values[i] = keyValue[1]
 				}
@@ -173,8 +234,21 @@
 
 				getNextGeneration();
 				currentState = getCurrentState();
-				drawGeneration(currentState.join(" "),20, getCurrentGeneration());
+				drawGeneration(currentState.join(" "),15, getCurrentGeneration());
 			});
+
+			let playButton = document.querySelector("#playButton");
+			playButton.addEventListener('click', function(){
+				for(let i = 0; i < 100; i++ ){
+					if(getCurrentGeneration() == 0){
+						setInitialState(obtainInitialState());
+					}
+	
+					getNextGeneration();
+					currentState = getCurrentState();
+					drawGeneration(currentState.join(" "),15, getCurrentGeneration());
+				}
+			})
 		</script>
 	</body>
 </html>
