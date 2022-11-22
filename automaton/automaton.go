@@ -1,5 +1,11 @@
 package automaton
 
+import (
+	"fmt"
+)
+
+var ruleSeparator = ";"
+
 type Automaton struct {
 	cells          []cell
 	states         map[string]state
@@ -18,104 +24,69 @@ func NewAutomaton(cellAmount int, states []string, transitions map[string]string
 	}
 }
 
-func (automaton *Automaton) CurrentState() (cells []string) {
-	cells = make([]string, len(automaton.cells))
-	for key, value := range automaton.cells {
-		cells[key] = value.state.value
+func (automaton *Automaton) GetCurrentState() []string {
+	cells := make([]string, len(automaton.cells))
+	for key, currentCell := range automaton.cells {
+		cells[key] = currentCell.state.value
 	}
 
-	return
+	return cells
 }
 
-func (automaton *Automaton) NextGeneration() {
+func (automaton *Automaton) CalculateNextGeneration() {
 	newCells := make([]cell, len(automaton.cells))
 	for i := 0; i < len(automaton.cells); i++ {
-		cellNeighborhood := automaton.obtainCellNeighborhood(i)
-		newCells[i] = cell{state: automaton.newStateFromRule(cellNeighborhood)}
+		cellNeighbors := automaton.obtainCellNeighbors(i)
+		newCells[i] = cell{state: automaton.newStateFromCellNeighbors(cellNeighbors)}
 	}
 
 	automaton.cells = newCells
 }
 
-func (automaton *Automaton) SetCells(states []string) {
+func (automaton *Automaton) SetEachCellNewState(newCellStates []string) error {
+	if len(newCellStates) != len(automaton.cells) {
+		return fmt.Errorf("not equal amount of new cell states for the quantity of cells, expected %d given %d", len(automaton.cells), len(newCellStates))
+	}
+
+	newCells := make([]cell, len(automaton.cells))
+
 	for key := range automaton.cells {
-		automaton.cells[key].state = automaton.states[states[key]]
+		newCellState, exists := automaton.states[newCellStates[key]]
+		if !exists {
+			return fmt.Errorf("passed state %s at position %d that doesn't exist in the current automaton", newCellStates[key], key)
+		}
+
+		newCells[key].state = newCellState
 	}
+
+	automaton.cells = newCells
+
+	return nil
 }
 
-func (automaton *Automaton) newStateFromRule(state []int) state {
-	rule := automaton.obtainRule(state)
+// obtains the neighbor cells according to a circular ending
+func (automaton *Automaton) obtainCellNeighbors(cellPosition int) []cell {
+	rightNeighbors := getRightCellsPositions(automaton.rightNeighbors, cellPosition, len(automaton.cells))
+	leftNeighbors := getLeftCellsPositions(automaton.leftNeighbors, cellPosition, len(automaton.cells))
+
+	neighborsPosition := append(leftNeighbors, cellPosition)
+	neighborsPosition = append(neighborsPosition, rightNeighbors...)
+
+	cellNeighbors := make([]cell, len(neighborsPosition))
+
+	for key, pos := range neighborsPosition {
+		cellNeighbors[key] = automaton.cells[pos]
+	}
+
+	return cellNeighbors
+}
+
+// each rule that defines a transition is a set of states separated by the ruleSeparator
+func (automaton *Automaton) newStateFromCellNeighbors(cellNeighbors []cell) state {
+	rule := ""
+	for _, cell := range cellNeighbors {
+		rule += cell.state.value + ruleSeparator
+	}
+
 	return automaton.transitions[rule]
-}
-
-func (automaton *Automaton) obtainRule(state []int) (rule string) {
-	rule = ""
-	for _, value := range state {
-		rule += automaton.cells[value].state.value + ";"
-	}
-
-	return
-}
-
-//obtains the neighbor cells indexes according to a circular ending
-func (automaton *Automaton) obtainCellNeighborhood(cellPosition int) (answer []int) {
-	rightNeighbors := getRightCells(automaton.rightNeighbors, cellPosition, len(automaton.cells))
-	leftNeighbors := getLeftCells(automaton.leftNeighbors, cellPosition, len(automaton.cells))
-
-	answer = append(leftNeighbors, cellPosition)
-	answer = append(answer, rightNeighbors...)
-
-	return
-}
-
-func getRightCells(steps int, center int, max int) (rightNeighbors []int) {
-	rightNeighbors = make([]int, steps)
-	current := center
-
-	for i := 0; i < steps; i++ {
-		current += 1
-
-		if current >= max {
-			current = 0
-		}
-
-		rightNeighbors[i] = current
-	}
-
-	return
-}
-
-func getLeftCells(steps int, center int, max int) (leftNeighbors []int) {
-	leftNeighbors = make([]int, steps)
-	current := center
-
-	for i := 0; i < steps; i++ {
-		current -= 1
-
-		if current < 0 {
-			current = max - 1
-		}
-
-		leftNeighbors[len(leftNeighbors)-1-i] = current
-	}
-
-	return
-}
-
-func createStates(states []string) (properStates map[string]state) {
-	properStates = make(map[string]state, len(states))
-	for _, value := range states {
-		properStates[value] = state{value: value}
-	}
-
-	return
-}
-
-func createTransitions(transitions map[string]string) (properTransitions map[string]state) {
-	properTransitions = make(map[string]state, len(transitions))
-	for key, value := range transitions {
-		properTransitions[key] = state{value: value}
-	}
-
-	return
 }

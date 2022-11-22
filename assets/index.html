@@ -63,7 +63,7 @@
 					<div class="row my-4" style="text-align: center;">
 						<div class="col">
 							<div class="btn-group" role="group" aria-label="Basic example">
-								<button class="btn btn-light" id="newAutomata">New Automata</button>
+								<button class="btn btn-light" id="newAutomaton">New Automata</button>
 								<button class="btn btn-light" id="nextGeneration">Next Generation</button>
 							</div>
 						</div>
@@ -202,8 +202,8 @@
 			});
 
 
-			let newAutomataButton= document.querySelector('#newAutomata');
-			newAutomataButton.addEventListener('click', function() {
+			let newAutomatonButton= document.querySelector('#newAutomaton');
+			newAutomatonButton.addEventListener('click', function() {
 				clearCanvas();
 				let cellAmount = parseInt(document.querySelector('#amountCells').value) ;
 				let rightNeighbors = parseInt(document.querySelector("#rightNeighbors").value);
@@ -220,7 +220,7 @@
 				}
 
 				createCellsRow(cellAmount, states)
-				newAutomata(cellAmount, leftNeighbors, rightNeighbors, states, keys, values)
+				newAutomaton(cellAmount, leftNeighbors, rightNeighbors, states, keys, values)
 				setInitialState(obtainInitialState());
 
 			});
@@ -232,7 +232,7 @@
 					setInitialState(obtainInitialState());
 				}
 
-				getNextGeneration();
+				calculateNextGeneration();
 				currentState = getCurrentState();
 				drawGeneration(currentState.join(" "),15, getCurrentGeneration());
 			});
@@ -244,7 +244,7 @@
 						setInitialState(obtainInitialState());
 					}
 	
-					getNextGeneration();
+					calculateNextGeneration();
 					currentState = getCurrentState();
 					drawGeneration(currentState.join(" "),15, getCurrentGeneration());
 				}

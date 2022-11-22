@@ -1,3 +1,4 @@
+// to export our functions we must wrap our functions to be exported in main using syscall/js
 package main
 
 import (
@@ -7,29 +8,34 @@ import (
 )
 
 var (
-	auto       *automaton.Automaton
-	generation int
+	currentAutomaton  *automaton.Automaton
+	currentGeneration int
 )
 
 func main() {
 	c := make(chan struct{}, 0)
-	js.Global().Set("newAutomata", js.FuncOf(newAutomata))
+	js.Global().Set("newAutomaton", js.FuncOf(newAutomaton))
 	js.Global().Set("getCurrentState", js.FuncOf(getCurrentState))
-	js.Global().Set("getNextGeneration", js.FuncOf(getNextGeneration))
+	js.Global().Set("calculateNextGeneration", js.FuncOf(calculateNextGeneration))
 	js.Global().Set("setInitialState", js.FuncOf(setInitialState))
 	js.Global().Set("getCurrentGeneration", js.FuncOf(getCurrentGeneration))
 	<-c
 }
 
-//args:
-// 0 -> cell amount
-// 1 -> left neighbors
-// 2 -> right neighbors
-// 3 -> states string[]
-// 4 -> keys string[]
-// 5 -> values string[]
-func newAutomata(this js.Value, args []js.Value) interface{} {
-	generation = 0
+/*
+	args:
+
+	pos  |name          |type
+	-------------------------
+	0     cellAmount	 int
+	1     leftNeighbors  int
+	2     rightNeighbors int
+	3     states         string[]
+	4     keys           string[]
+	5     values         string[]
+*/
+func newAutomaton(this js.Value, args []js.Value) interface{} {
+	currentGeneration = 0
 	cellAmount := args[0].Int()
 	leftNeighbors := args[1].Int()
 	rightNeighbors := args[2].Int()
@@ -49,13 +55,13 @@ func newAutomata(this js.Value, args []js.Value) interface{} {
 		transitions[keys[i]] = values[i]
 	}
 
-	auto = automaton.NewAutomaton(cellAmount, states, transitions, leftNeighbors, rightNeighbors)
+	currentAutomaton = automaton.NewAutomaton(cellAmount, states, transitions, leftNeighbors, rightNeighbors)
 
 	return true
 }
 
 func getCurrentState(this js.Value, args []js.Value) interface{} {
-	state := auto.CurrentState()
+	state := currentAutomaton.GetCurrentState()
 	aux := make([]interface{}, len(state))
 	for key, value := range state {
 		aux[key] = value
@@ -64,31 +70,37 @@ func getCurrentState(this js.Value, args []js.Value) interface{} {
 	return aux
 }
 
-func getCurrentGeneration(this js.Value, args []js.Value) interface{} {
-	return generation
-}
-
-func getNextGeneration(this js.Value, args []js.Value) interface{} {
-	auto.NextGeneration()
-	generation += 1
+func calculateNextGeneration(this js.Value, args []js.Value) interface{} {
+	currentAutomaton.CalculateNextGeneration()
+	currentGeneration += 1
 
 	return true
 }
 
-// 0 -> []string
+/*
+	args:
+
+	pos  |name          |type
+	-------------------------
+	0     cellStates	 string[]
+*/
 func setInitialState(this js.Value, args []js.Value) interface{} {
-	values := make([]string, args[0].Length())
-	values = initSliceString(args[0], args[0].Length())
-	auto.SetCells(values)
+	cellStates := make([]string, args[0].Length())
+	cellStates = initSliceString(args[0], args[0].Length())
+	currentAutomaton.SetEachCellNewState(cellStates)
 
 	return true
 }
 
-func initSliceString(args js.Value, length int) (v []string) {
-	v = make([]string, length)
+func getCurrentGeneration(this js.Value, args []js.Value) interface{} {
+	return currentGeneration
+}
+
+func initSliceString(args js.Value, length int) []string {
+	v := make([]string, length)
 	for i := 0; i < length; i++ {
 		v[i] = args.Index(i).String()
 	}
 
-	return
+	return v
 }
