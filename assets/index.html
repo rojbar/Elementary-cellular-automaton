@@ -1,254 +1,96 @@
-<html>
-	<head>
-		<meta charset="utf-8"/>
-		<script src="wasm_exec.js"></script>
-		<script>
-			const go = new Go();
-			WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
-				go.run(result.instance);
-			});
-		</script>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-		<link rel="stylesheet" href="styles.css">
-	</head>
-	<body>
-		<div class="container-fluid">
-			<div class="row vh-100">
-				<div class="col-10 vh-100">
-					<div class="row" style="background-color: grey; height: 90%;">
-						<div class="col h-100  pt-2 overflow-auto"> 
-							<canvas id="canvas" style="background-color: whitesmoke;"></canvas>
-						</div>
-					</div>
-					<div class="row overflow-auto" style="background-color: gray; height: 10%;" id="cellRow">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Unicellular Automaton</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+	integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+	<link rel="stylesheet" href="./css/styles.css">
+	<script src="./js/wasm_exec.js"></script>
+	<script>
+		const go = new Go();
+		WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
+			go.run(result.instance);
+		});
+	</script>
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<!-- left panel -->
+			<div class="col-10 vh-100">
+				<!-- first row -->
+				<div class="row overflow-auto cell-row" id="cellRow">
+				</div>
+				<!-- canva -->
+				<div class="row draw-area p-2">
+					<div class="col h-100 overflow-auto">
+						<canvas class="canva" id="canvas"></canvas>
 					</div>
 				</div>
-				<div class="col-2 vh-100 overflow-auto"  style="background-color: black; color: white;">
-					<div class="row my-3">
-						<div class="col">
-							<label class="form-label">Cell Amount</label>
-							<input class="form-control" id="amountCells" type="number">
-						</div>
-						<div class="col">
-							<label class="form-label">Right neighbors</label>
-							<input class="form-control" id="rightNeighbors" type="number">
-						</div>
-						<div class="col">
-							<label class="form-label">Left neighbors</label>
-							<input class="form-control" id="leftNeighbors" type="number">
-						</div>
+			</div>
+			<!-- right panel | menu panel -->
+			<div class="col-2 vh-100 overflow-auto menu-area shadow-lg" style="text-align: center;">
+				<div class="row py-4 px-2" >
+					<div class="col">
+						<label class="form-label">Cell Amount</label>
+						<input class="form-control" id="amountCells" type="number">
 					</div>
-					<div class="row my-3">
-						<div class="col">
-							<div class="row">
-								<div class="col">
-									<label class="form-label">States for a single cell, separated by comma</label>
-									<textarea class="form-control" id="states"></textarea>
-								</div>
-							</div>
-							<div class="row mt-2" style="text-align: center;">
-								<div class="col">
-									<button class="btn btn-light" id="generateRules">Create Rules</button>
-								</div>
+					<div class="col" >
+						<label class="form-label">Right neighbors</label>
+						<input class="form-control" id="rightNeighbors" type="number">
+					</div>
+					<div class="col">
+						<label class="form-label">Left neighbors</label>
+						<input class="form-control" id="leftNeighbors" type="number">
+					</div>
+				</div>
+				<div class="row p-4">
+					<div class="col">
+						<div class="row">
+							<div class="col">
+								<label class="form-label">States for a single cell separated by comma
+									[state,state,...]
+								</label>
+								<textarea class="form-control" id="states"></textarea>
 							</div>
 						</div>
-					</div>
-					<div class="row my-3">
-						<div class="col">
-							<label class="form-label">State for each possible ruleset, [state;state;state;...]-[newstate],</label>
-							<textarea class="form-control" id="transitions" rows="10"></textarea>
-						</div>
-					</div>
-					
-					<div class="row my-4" style="text-align: center;">
-						<div class="col">
-							<div class="btn-group" role="group" aria-label="Basic example">
-								<button class="btn btn-light" id="newAutomaton">New Automata</button>
-								<button class="btn btn-light" id="nextGeneration">Next Generation</button>
+						<div class="row mt-2" style="text-align: center;">
+							<div class="col">
+								<button class="btn btn-light" id="generateRules">Create Rules</button>
 							</div>
 						</div>
 					</div>
-					<div class="row my-2" style="text-align: center;">
-						<div class="col">
-							<div class="btn-group" role="group" aria-label="Basic example">
-								<button class="btn btn-light" id="playButton">Play</button>
-							</div>
+				</div>
+				<div class="row p-4">
+					<div class="col">
+						<label class="form-label">State for each possible ruleset
+							[state;state;...]-[newstate],</label>
+						<textarea class="form-control" id="transitions" rows="10"></textarea>
+					</div>
+				</div>
+
+				<div class="row p-4">
+					<div class="col">
+						<div class="btn-group" role="group" aria-label="Basic example">
+							<button class="btn btn-light" id="newAutomaton">New Automata</button>
+							<button class="btn btn-light" id="nextGeneration">Next Generation</button>
 						</div>
 					</div>
-					
+				</div>
+				<div class="row p-2" style="text-align: center;">
+					<div class="col">
+						<div class="btn-group" role="group" aria-label="Basic example">
+							<button class="btn btn-light" id="playButton">Play</button>
+						</div>
+					</div>
 				</div>
 
 			</div>
 		</div>
-		<script>
-
-			function resizeCanvas(){
-				const canvas = document.getElementById('canvas');
-				canvas.style.width = "100%";
-				canvas.style.height = "1000%";
-				canvas.width = canvas.offsetWidth;
-				canvas.height = canvas.offsetHeight;
-			}
-			resizeCanvas()
-
-			function clearCanvas(){
-				const canvas = document.getElementById('canvas');
-				if (canvas.getContext){
-					const ctx = canvas.getContext('2d');
-					ctx.clearRect(0, 0, canvas.width, canvas.height);
-				}
-				
-			}
-
-
-			//generation->string, size->int
-			function drawGeneration(generation, size, posGeneration) {
-				const canvas = document.getElementById('canvas');
-				if (canvas.getContext) {
-				  const ctx = canvas.getContext('2d');
-				  ctx.font = `${size}px arial`;
-				  ctx.fillText(generation,size,10+(posGeneration*(size+5))); 
-				}
-			}
-
-			function configurations(states, cellsQuantity) {
-				
-				let answer = states.map(x => [x])
-				for(let i = 1; i < cellsQuantity; i++){
-					answer = multiplyArrays(answer, states.map(x => [x]))				
-				}
-
-				return answer;
-			};
-	
-			function multiplyArrays(a,b){
-				let answer = []
-				for(let i = 0; i < a.length; i++){
-					for(let j =0; j < b.length; j++){
-						answer.push(a[i].concat(b[j]))
-					}
-				}
-				return answer
-			}
-
-			function obtainInitialState(){
-				let cells = document.querySelector('#cellRow').children;
-				
-				states = []
-				for (let i=0; i < cells.length; i++){
-					states[i] = cells[i].innerText
-				}
-				return states
-			}
-
-			//amount ->int
-			function createCellsRow(amount, states){
-				let row = document.querySelector('#cellRow');
-				row.innerHTML=""
-
-				for(let i =0; i < amount; i++){
-					const textNode = document.createElement('div');
-					textNode.innerText = states[0];
-					textNode.className = "col border border-secondary border-2 h-100 d-flex align-items-center justify-content-center cell";
-					textNode.setAttribute("id","cell"+i);
-					textNode.addEventListener('click', cellChangeState);
-					row.appendChild(textNode);
-				}
-
-			}
-
-			function cellChangeState(e){
-				const cellID = e.target.getAttribute("id");
-				const cell = document.querySelector("#"+cellID);
-				const states = window.document.states;
-				let newState = "";
-				let posNewState = -1;
-				for(let i = 0; i < states.length; i++){
-					if(states[i] == cell.innerText){
-						posNewState = i+1;
-						break
-					}
-				}
-
-				if(posNewState == states.length){
-					posNewState = 0;
-				}
-				cell.innerText =  states[posNewState];
-			}
-
-
-			let states = document.querySelector("#generateRules").addEventListener('click', function(){
-				let states = document.querySelector("#states").value.split(",");
-				let rightNeighbors = parseInt(document.querySelector("#rightNeighbors").value);
-				let leftNeighbors = parseInt(document.querySelector("#leftNeighbors").value);
-
-				if(states.length >= 8){
-					window.alert("too many states, too many rulesets!")
-					return
-				}
-				let perm = configurations(states, rightNeighbors + leftNeighbors+1);
-				let transitions = document.querySelector("#transitions")
-
-				value = "";
-				for(let i = 0; i < perm.length; i++){
-					if (i === perm.length -1 ){
-						value += perm[i].join(";")+`;-${states[0]}`;
-						break
-					}
-					value += perm[i].join(";")+`;-${states[0]}\n`;
-				}
-				transitions.value = value;
-
-			});
-
-
-			let newAutomatonButton= document.querySelector('#newAutomaton');
-			newAutomatonButton.addEventListener('click', function() {
-				clearCanvas();
-				let cellAmount = parseInt(document.querySelector('#amountCells').value) ;
-				let rightNeighbors = parseInt(document.querySelector("#rightNeighbors").value);
-				let leftNeighbors = parseInt(document.querySelector("#leftNeighbors").value);
-				let states = document.querySelector("#states").value.split(",");
-				window.document.states = states
-				let keys = []
-				let values =[] 
-				let transitions = document.querySelector("#transitions").value.split("\n");
-				for(i = 0; i < transitions.length; i++){
-					keyValue = transitions[i].trim().split("-")
-					keys[i] = keyValue[0]
-					values[i] = keyValue[1]
-				}
-
-				createCellsRow(cellAmount, states)
-				newAutomaton(cellAmount, leftNeighbors, rightNeighbors, states, keys, values)
-				setInitialState(obtainInitialState());
-
-			});
-
-			let nexGenerationButton= document.querySelector("#nextGeneration");
-			nexGenerationButton.addEventListener('click', function(){
-
-				if(getCurrentGeneration() == 0){
-					setInitialState(obtainInitialState());
-				}
-
-				calculateNextGeneration();
-				currentState = getCurrentState();
-				drawGeneration(currentState.join(" "),15, getCurrentGeneration());
-			});
-
-			let playButton = document.querySelector("#playButton");
-			playButton.addEventListener('click', function(){
-				for(let i = 0; i < 100; i++ ){
-					if(getCurrentGeneration() == 0){
-						setInitialState(obtainInitialState());
-					}
-	
-					calculateNextGeneration();
-					currentState = getCurrentState();
-					drawGeneration(currentState.join(" "),15, getCurrentGeneration());
-				}
-			})
-		</script>
-	</body>
+	</div>
+	<script type="module" src="./js/main.js"></script>
+</body>
 </html>

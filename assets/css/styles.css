@@ -1,0 +1,23 @@
+.cell {
+    background-color: #fff; 
+    text-align: center;
+}
+
+.cell-row {
+    background-color: gray; 
+    height: 10%;
+}
+
+.draw-area {
+    background-color: grey;
+    height: 90%;
+}
+
+.canva {
+    background-color: whitesmoke;
+}
+
+.menu-area {
+    color: white;
+    background-color: black;
+}
