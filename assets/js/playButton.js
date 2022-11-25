@@ -1,4 +1,5 @@
 import drawGeneration from "./drawGeneration.js";
+import obtainInitialState from "./obtainInitialState.js";
 
 function playButton(){
     document.querySelector("#playButton").addEventListener('click', function () {
@@ -9,7 +10,7 @@ function playButton(){
 
             calculateNextGeneration();
             let currentState = getCurrentState();
-            drawGeneration(currentState.join(" "), 15, getCurrentGeneration());
+            drawGeneration(currentState.join(" "), 10, getCurrentGeneration());
         }
     })
 }

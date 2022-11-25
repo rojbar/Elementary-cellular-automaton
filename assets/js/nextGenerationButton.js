@@ -9,7 +9,7 @@ function nexGenerationButton(){
     
         calculateNextGeneration();
         let currentState = getCurrentState();
-        drawGeneration(currentState.join(" "), 15, getCurrentGeneration());
+        drawGeneration(currentState.join(" "), 10, getCurrentGeneration());
     });
 }
 export default nexGenerationButton
