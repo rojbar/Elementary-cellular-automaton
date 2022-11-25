@@ -1,7 +1,7 @@
 export function resizeCanvas() {
     const canvas = document.getElementById('canvas');
-    canvas.style.width = "300%";
-    canvas.style.height = "300%";
+    canvas.style.width = "1080px";
+    canvas.style.height = "920px";
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
 }
