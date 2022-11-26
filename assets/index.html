@@ -33,61 +33,47 @@
 			</div>
 			<!-- right panel | menu panel -->
 			<div class="col-2 vh-100 overflow-auto menu-area shadow-lg" style="text-align: center;">
-				<div class="row py-4 px-2" >
+				<div class="row">
 					<div class="col">
-						<label class="form-label">Cell Amount</label>
+						<label class="form-label" for="amountCells">Cell Amount</label>
 						<input class="form-control" id="amountCells" type="number">
 					</div>
-					<div class="col" >
-						<label class="form-label">Right neighbors</label>
+				</div>
+				<div class="row">
+					<div class="col">
+						<label class="form-label" for="rightNeighbors">Right neighbors</label>
 						<input class="form-control" id="rightNeighbors" type="number">
 					</div>
+				</div>
+				<div class="row mb-3">
 					<div class="col">
-						<label class="form-label">Left neighbors</label>
+						<label class="form-label" for="leftNeighbors">Left neighbors</label>
 						<input class="form-control" id="leftNeighbors" type="number">
 					</div>
 				</div>
-				<div class="row p-4">
+				<div class="row mb-3">
 					<div class="col">
-						<div class="row">
-							<div class="col">
-								<label class="form-label">States for a single cell separated by comma
-									[state,state,...]
-								</label>
-								<textarea class="form-control" id="states"></textarea>
-							</div>
-						</div>
-						<div class="row mt-2" style="text-align: center;">
-							<div class="col">
-								<button class="btn btn-light" id="generateRules">Create Rules</button>
-							</div>
-						</div>
+						<label class="form-label" for="states">States for a single cell separated by comma
+							[state,state,...]
+						</label>
+						<textarea class="form-control" id="states" rows="10" cols="50"></textarea>					
+						<button class="btn mt-1 btn-light" id="generateRules">Create Rules</button>
 					</div>
 				</div>
-				<div class="row p-4">
+				<div class="row mb-3">
 					<div class="col">
 						<label class="form-label">State for each possible ruleset
 							[state;state;...]-[newstate],</label>
 						<textarea class="form-control" id="transitions" rows="10"></textarea>
+						<button class="btn btn-light mt-1" id="newAutomaton">New Automata</button>
+						<button class="btn btn-light mt-1" id="nextGeneration">Next Generation</button>
 					</div>
 				</div>
-
-				<div class="row p-4">
+				<div class="row">
 					<div class="col">
-						<div class="btn-group-vertical" role="group" aria-label="Basic example">
-							<button class="btn btn-light" id="newAutomaton">New Automata</button>
-							<button class="btn btn-light" id="nextGeneration">Next Generation</button>
-						</div>
+						<button class="btn btn-light mb-1" id="playButton">Play</button>
 					</div>
 				</div>
-				<div class="row p-2" style="text-align: center;">
-					<div class="col">
-						<div class="btn-group" role="group" aria-label="Basic example">
-							<button class="btn btn-light" id="playButton">Play</button>
-						</div>
-					</div>
-				</div>
-
 			</div>
 		</div>
 	</div>
