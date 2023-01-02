@@ -7,4 +7,9 @@
 It runs on port 9090
 
 `cd server/`
-`go run ./server/main.go`
+
+`go run ./main.go`
+
+# Git repository
+
+https://github.com/rojbar/vidaArtificial
